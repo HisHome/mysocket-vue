@@ -12,9 +12,11 @@
         <div style="padding: 10px;" v-if="userData && userData.username">
              <div style="padding-bottom: 66px;">
                 <!--  -->
-                <div v-for="(item, index) in dataList"  :key="index">
-                    <mt-cell v-if="item.username != userData.username" :title=" item.username +': '+ item.msg " :key="index"></mt-cell>
-                    <mt-cell v-else :key="index"> {{ item.msg +' : '+  item.username}} </mt-cell>
+                <div style="border: 1px solid #ececec;height: 100%;">
+                    <div v-for="(item, index) in dataList"  :key="index">
+                        <mt-cell v-if="item.username != userData.username" :title=" item.username +': '+ item.msg " :key="index"></mt-cell>
+                        <mt-cell v-else :key="index"> {{ item.msg +' : '+  item.username}} </mt-cell>
+                    </div>
                 </div>
                 
              </div>
