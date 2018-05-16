@@ -66,7 +66,7 @@
                Toast({
                   message: '用户名/密码不能为空',
                   position: 'top',
-                  duration: 5000
+                  duration: 2000
                 });
            }
          },
