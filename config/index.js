@@ -37,8 +37,8 @@ module.exports = {
   },
 
   build: {
-    index: path.resolve(__dirname, '../../input/static/index.html'),
-    assetsRoot: path.resolve(__dirname, '../../input/static'),
+    index: path.resolve(__dirname, '../../mysocket/views/index.html'),
+    assetsRoot: path.resolve(__dirname, '../../mysocket/views'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
