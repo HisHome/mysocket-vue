@@ -47,12 +47,12 @@
         }
       },
       created(){
-        let data = localStorage.getItem('socketUser')
+        // let data = localStorage.getItem('socketUser')
+        let data
         if ( data ) {
             this.userData = JSON.parse(data)
         }
         this.io = io();
-        console.log(this.io)
         this.io.on('addnews', (data)=>{
           this.dataList.push(data)
         })
