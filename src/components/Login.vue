@@ -56,6 +56,24 @@
         this.io.on('addnews', (data)=>{
           this.dataList.push(data)
         })
+        this.io.on('add user', (data)=>{
+          if (data.username) {
+            Toast({
+              message: `${data.username}已上线`,
+              position: 'top',
+              duration: 3000
+            });
+          }
+        })
+         this.io.on('user left', (data)=>{
+          if (data.username) {
+            Toast({
+              message: `${data.username}已离开`,
+              position: 'top',
+              duration: 2500
+            });
+          }
+        })
       },
       methods: {
          getUserAndPassword(){
@@ -64,6 +82,7 @@
              localStorage.setItem('socketUser', JSON.stringify(this.userData))
              this.username = '';
              this.password = '';
+             this.io.emit('add user', this.userData)
            } else {
                Toast({
                   message: '用户名/密码不能为空',
