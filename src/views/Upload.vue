@@ -1,6 +1,6 @@
 <template>
   <div class="upload" @click="upload">
-    <span class="plus"> + </span>
+    <span class="plus"> {{des}} </span>
     <input type="file" class="hidden" :ref="name" >
     <img class="img_show" v-if="imgUrl" :src="imgUrl" :alt="fileKey">
   </div>
@@ -21,7 +21,7 @@
       value: String,
       name: String,
       data: Object,
-      action: String
+      des: String
     },
     created () {},
     methods: {
@@ -64,10 +64,9 @@
         xhr.open('POST', '/apis/uploadImg');
         xhr.onload = function (data) {
           let response = JSON.parse(data.currentTarget.response);
-          console.log(response)
           if (response.code === 200) {
             self.imgUrl = '/apis'+response.result;
-            self.$emit('input', response.result);
+            self.$emit('input', self.imgUrl);
           } else {
             Toast({
                 message: `${response.message}`,
@@ -107,7 +106,6 @@
         width: 100%;
         height: 100%;
         position: relative;
-        z-index: 2;
         border: none;
     }
     .upload:hover{
@@ -119,10 +117,9 @@
        position: absolute;
       left: 50%;
       top:50%;
-      font-size: 30px;
-      margin-top: -22px;
-      margin-left: -8px;
-      z-index: 2;
+      font-size: 16px;
+      margin-top: -12px;
+      margin-left: -26px;
    }
 </style>
 

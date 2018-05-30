@@ -2,9 +2,9 @@
   <div class="hello" >
         <mt-header fixed title=" 登录 "></mt-header>
         <div style="padding: 15px;">
-            <mt-field label="用户名" placeholder="输入用户名" type="text" v-model="username"></mt-field>
-            <mt-field label="密码" placeholder="请输入密码" style="border-bottom: 1px solid #ececec;" type="password" v-model="password"></mt-field>
-            <mt-button type="primary" style="width: 100%;margin-top:40px;" @click="getUserAndPassword" > 登录 </mt-button>
+            <mt-field label="用户名" placeholder="输入用户名" type="text" v-model="user"></mt-field>
+            <mt-field label="密码" placeholder="请输入密码" style="border-bottom: 1px solid #ececec;" type="password" v-model="pwd"></mt-field>
+            <mt-button type="primary" style="width: 100%;margin-top:40px;" @click="getUserAndPwd" > 登录 </mt-button>
             <router-link :to="{name:'Reg'}" >
                 <mt-button type="default" style="width: 100%;margin-top:10px;" > 注册 </mt-button>
             </router-link>
@@ -19,8 +19,8 @@
       name: 'HelloWorld',
       data () {
         return {
-          username: '',
-          password: '',
+          user: '',
+          pwd: '',
           io: undefined,
         }
       },
@@ -31,9 +31,9 @@
         } 
         this.io = io();
         this.io.on('add user', (data)=>{
-            if (data.username && data.username != this.isLoginName) {
+            if (data.user && data.user != this.user) {
                 Toast({
-                  message: `${data.username}已上线`,
+                  message: `${data.user}已上线`,
                   position: 'top',
                   duration: 3000
                 });
@@ -41,11 +41,11 @@
         })
       },
       methods: {
-         getUserAndPassword(type){
-            if ( this.username && this.password ) {
-                util.post('/apis/login', {username: this.username, password: this.password},  (data) => {
-                    this.getHistory();
-                    this.io.emit('add user', { username: this.username })
+         getUserAndPwd(type){
+            if ( this.user && this.pwd ) {
+                util.post('/apis/login', {user: this.user, pwd: this.pwd},  (data) => {
+                    this.io.emit('add user', { user: this.user });
+                    VueRouter.push({name: 'IndexPage'});
                 })
             } else {
                 Toast({

@@ -1,14 +1,18 @@
 <template>
   <div class="hello" >
-        <mt-header fixed title=" 注册 "></mt-header>
+        <mt-header fixed title=" 注册 ">
+            <router-link to="/login" slot="left">
+                <mt-button icon="back">返回登录</mt-button>
+            </router-link>
+        </mt-header>
         <div style="padding: 15px;">
             <div class="imgBox">
-                <Upload  v-model="imgData" :name="'bankCardImg'" :data="{fileUsageType: 23}" />
+                <Upload  v-model="imgData" :name="'bankCardImg'"  :des="'上传头像'" />
             </div>
-            <mt-field label="用户名" placeholder="输入用户名" type="text" v-model="username"></mt-field>
-            <mt-field label="密码" placeholder="请输入密码" style="border-bottom: 1px solid #ececec;" type="password" v-model="password"></mt-field>
+            <mt-field label="用户名" placeholder="输入用户名" type="text" v-model="user"></mt-field>
+            <mt-field label="密码" placeholder="请输入密码" style="border-bottom: 1px solid #ececec;" type="password" v-model="pwd"></mt-field>
             <router-link :to="{name:'Reg'}" >
-                <mt-button type="primary" style="width: 100%;margin-top:40px;" @click="getUserAndPassword" > 注册并登录 </mt-button>
+                <mt-button type="primary" style="width: 100%;margin-top:40px;" @click="getUserAndPwd" > 注册并登录 </mt-button>
             </router-link>
         </div>
   </div>
@@ -22,8 +26,8 @@
       name: 'HelloWorld',
       data () {
         return {
-          username: '',
-          password: '',
+          user: '',
+          pwd: '',
           io: undefined,
           imgData: ''
         }
@@ -35,9 +39,9 @@
         }
         this.io = io();
         this.io.on('add user', (data)=>{
-            if (data.username && data.username != this.isLoginName) {
+            if (data.user && data.user != this.user) {
                 Toast({
-                  message: `${data.username}已上线`,
+                  message: `${data.user}已上线`,
                   position: 'top',
                   duration: 3000
                 });
@@ -45,14 +49,15 @@
         })
       },
       methods: {
-         getUserAndPassword(type){
-            if ( this.username && this.password ) {
-                util.post('/apis/regUser', {username: this.username, password: this.password},  (data) => {
-                    this.io.emit('add user', {username: this.username})
+         getUserAndPwd(type){
+            if ( this.user && this.pwd && this.imgData ) {
+                util.post('/apis/regUser', {user: this.user, pwd: this.pwd, headerImg: this.imgData },  (data) => {
+                    this.io.emit('add user', {user: this.user})
+                    VueRouter.push({name: 'IndexPage'});
                 })
             } else {
                 Toast({
-                    message: '用户名/密码不能为空',
+                    message: '用户名/密码/头像不能为空',
                     position: 'top',
                     duration: 2000
                 });
