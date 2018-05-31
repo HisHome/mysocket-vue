@@ -5,8 +5,13 @@
                 <mt-button icon="back">返回</mt-button>
             </router-link>
         </mt-header>
-        <div style="padding: 15px;">
-            xxxxx等待添加
+        <div style="padding: 15px;text-align:center;">
+            <div class="img_box">
+                <img v-if="userData.headerImg" :src="userData.headerImg" alt="">
+            </div>
+            <div style="padding-top:20px;">
+                <mt-button type="primary">用户名:{{userData.user}}</mt-button>
+            </div>
         </div>
   </div>
 </template>
@@ -19,16 +24,19 @@
       name: 'HelloWorld',
       data () {
         return {
-          user: '',
-          pwd: '',
+          userData: {},
           io: undefined,
-          imgData: ''
         }
       },
       created(){
         let data = util.cookieGet('PY_SOCKET')
         if ( !data ) {
              VueRouter.push({name: 'Login'});
+        }
+        if (this.$route.query.user) {
+            this.getUserAndPwd({user: this.$route.query.user})
+        } else {
+            this.getUserAndPwd()
         }
         this.io = io();
         this.io.on('add user', (data)=>{
@@ -42,19 +50,11 @@
         })
       },
       methods: {
-         getUserAndPwd(type){
-            if ( this.user && this.pwd && this.imgData ) {
-                util.post('/apis/regUser', {user: this.user, pwd: this.pwd, headerImg: this.imgData },  (data) => {
-                    this.io.emit('add user', {user: this.user})
-                    VueRouter.push({name: 'IndexPage'});
-                })
-            } else {
-                Toast({
-                    message: '用户名/密码/头像不能为空',
-                    position: 'top',
-                    duration: 2000
-                });
-            }
+         getUserAndPwd(obj){
+            obj = obj || {}
+            util.post('/apis/getUserInfo', obj,  (data) => {
+                this.userData = data.result
+            })
          },
       },
       components: {
@@ -63,6 +63,17 @@
     }
 </script>
 <style  scoped>
-    
+    .img_box{
+        display: inline-block;
+        width: 160px;
+        height:160px;
+        overflow: hidden;
+        border-radius: 500px;
+        border: 1px solid #ececec;
+    }
+    .img_box img{
+        width: 100%;
+        height: 100%;
+    }
 </style>
 

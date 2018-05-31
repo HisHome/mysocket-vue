@@ -45,7 +45,7 @@
         const isLt1M = file.size / 1024 / 1024 < 1;
         if (!isLt1M) {
             Toast({
-                message: '上传的文件不能超过1MB!',
+                message: '上传的文件不能超过3MB!',
                 position: 'top',
                 duration: 2000
             });
