@@ -1,123 +1,68 @@
 <template>
   <div class="hello" >
-        xxxxxxx个人信息
+        <mt-header fixed title=" 个人信息 ">
+            <router-link to="/" slot="left">
+                <mt-button icon="back">返回</mt-button>
+            </router-link>
+        </mt-header>
+        <div style="padding: 15px;">
+            xxxxx等待添加
+        </div>
   </div>
 </template>
 <script>
     import { Toast } from 'mint-ui';
     import util from '@/public/util';
     import VueRouter from '@/router/index.js';
+    import Upload from '@/views/Upload';
     export default {
       name: 'HelloWorld',
       data () {
         return {
-          username: '',
-          password: '',
-          userData: {},
-          introduction: '',
+          user: '',
+          pwd: '',
           io: undefined,
-          dataList: [],
-          isLoginName: '',
+          imgData: ''
         }
       },
       created(){
         let data = util.cookieGet('PY_SOCKET')
-        if ( data ) {
-            this.isLoginName = decodeURI(data);
-            this.getHistory();
-        } else {
-                  VueRouter.push({name: 'Login'});
+        if ( !data ) {
+             VueRouter.push({name: 'Login'});
         }
         this.io = io();
-        this.io.on('addChatInfo', (data)=>{
-            this.getHistory();
-        })
         this.io.on('add user', (data)=>{
-            if (data.username && data.username != this.isLoginName) {
+            if (data.user && data.user != this.user) {
                 Toast({
-                  message: `${data.username}已上线`,
+                  message: `${data.user}已上线`,
                   position: 'top',
                   duration: 3000
                 });
             }
         })
-        this.io.on('user left', (data)=>{
-            if (data.username && data.username != this.isLoginName) {
-                Toast({
-                  message: `${data.username}已离开`,
-                  position: 'top',
-                  duration: 3000
-                });
-            }
-        })
-        this.getAllusers()
       },
       methods: {
-          getAllusers() {
-              util.post('/apis/searchUsers', {}, (data) => {
-                  if (data.code != 200) {
-                      Toast({
-                          message: '查询数据失败',
-                          position: 'top',
-                          duration: 2000
-                      });
-                  }
-              })
-          },
-          getHistory() {
-              util.post('/apis/searchHistory', {}, (data) => {
-                  if (data.code == 200) {
-                      if (data.result && data.result.length) {
-                          this.dataList = data.result;
-                      }
-                  } else {
-                      Toast({
-                          message: '查询数据失败',
-                          position: 'top',
-                          duration: 2000
-                      });
-                  }
-              })
-          },
-         getUserAndPassword(type){
-            if ( this.username && this.password ) {
-                let strUrl = '/apis/login';
-                if (type == 'reg' ) strUrl = '/apis/regUser';
-                util.post(strUrl, {username: this.username, password: this.password},  (data) => {
-                    this.isLoginName = this.username;
-                    this.getHistory();
-                    this.io.emit('add user', {username: this.username})
+         getUserAndPwd(type){
+            if ( this.user && this.pwd && this.imgData ) {
+                util.post('/apis/regUser', {user: this.user, pwd: this.pwd, headerImg: this.imgData },  (data) => {
+                    this.io.emit('add user', {user: this.user})
+                    VueRouter.push({name: 'IndexPage'});
                 })
             } else {
                 Toast({
-                    message: '用户名/密码不能为空',
+                    message: '用户名/密码/头像不能为空',
                     position: 'top',
                     duration: 2000
                 });
             }
          },
-         sendMsg(){
-            let obj = {
-              username: this.isLoginName,
-              introduction: this.introduction,
-            }
-            util.post('/apis/addChatInfo', obj, ()=>{
-                this.introduction = ''
-                this.io.emit('addChatInfo')
-            })
-         },
-         loginOut(){
-           util.post('/apis/logout', {}, ()=>{
-                this.io.emit('user left', {
-                    username: this.isLoginName
-                });
-                this.isLoginName = ''
-                this.username = ''
-           })
-         }
+      },
+      components: {
+          Upload
       }
     }
 </script>
-<style scoped>
+<style  scoped>
     
 </style>
+

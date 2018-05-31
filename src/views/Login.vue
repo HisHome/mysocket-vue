@@ -58,6 +58,8 @@
       }
     }
 </script>
-<style scoped>
-    
+<style >
+    .hello .mint-header-title{
+        font-size: 18px;
+    }
 </style>

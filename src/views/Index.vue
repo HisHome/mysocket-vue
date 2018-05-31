@@ -7,28 +7,32 @@
              <div style="padding-bottom: 66px;">
                 <div style="border: 1px solid #ececec;height: 100%;">
                     <div v-for="(item, index) in dataList"  :key="index" style="padding: 6px;" >
-                        <!-- 别人 -->
-                        <div v-if="item.user != userData.user" :key="index" class="other_msg">
-                            <div class="img_left_header_box">
-                                <img v-if="item.headerImg" :src="item.headerImg" alt="">
-                                <div class="no_header_img" v-else >暂无<br />头像</div>
-                            </div>
-                            <div>
-                                <div class="name_title_left">{{item.user || '未知'}}</div>  
-                                <div class="content_left"> {{item.introduction}} </div>
-                            </div>
-                        </div>
                         <!-- 自己 -->
-                        <div v-else :key="index" class="my_msg">
+                        <div v-if="item.user == userData.user"  :key="index" class="my_msg">
                             <div class="img_right_header_box">
-                                <img v-if="item.headerImg" :src="item.headerImg" alt="">
-                                <div class="no_header_img" v-else >暂无<br />头像</div>
+                                <router-link :to="{name:'PersonInfo'}" >
+                                    <img v-if="item.headerImg" :src="item.headerImg" alt="">
+                                    <div class="no_header_img" v-else >暂无<br />头像</div>
+                                </router-link>
                             </div>
                             <div>
                                 <div class="name_title_right">{{item.user || "未知"}}</div>  
                                 <div class="content_right">
                                     <div class="content_right_info"> {{item.introduction}} </div>
                                 </div>
+                            </div>
+                        </div>
+                        <!-- 别人 -->
+                        <div v-else :key="index" class="other_msg">
+                            <div class="img_left_header_box">
+                                <router-link :to="{name:'PersonInfo', query: { user: item.user}}" >
+                                    <img v-if="item.headerImg" :src="item.headerImg" alt="">
+                                    <div class="no_header_img" v-else >暂无<br />头像</div>
+                                </router-link>
+                            </div>
+                            <div>
+                                <div class="name_title_left">{{item.user || '未知'}}</div>  
+                                <div class="content_left"> {{item.introduction}} </div>
                             </div>
                         </div>
                     </div>
