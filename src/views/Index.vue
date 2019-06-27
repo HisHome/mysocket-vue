@@ -5,7 +5,7 @@
         </mt-header>
         <div style="padding: 10px;">
              <div style="padding-bottom: 66px;">
-                <div style="border: 1px solid #ececec;height: 100%;">
+                <div id="messageBox" style="border: 1px solid #ececec;">
                     <div v-for="(item, index) in dataList"  :key="index" style="padding: 6px;" >
                         <!-- 自己 -->
                         <div v-if="item.user == userData.user"  :key="index" class="my_msg">
@@ -16,7 +16,7 @@
                                 </router-link>
                             </div>
                             <div>
-                                <div class="name_title_right">{{item.user || "未知"}}</div>  
+                                <div class="name_title_right">{{item.user || "未知"}}</div>
                                 <div class="content_right">
                                     <div class="content_right_info"> {{item.introduction}} </div>
                                 </div>
@@ -31,7 +31,7 @@
                                 </router-link>
                             </div>
                             <div>
-                                <div class="name_title_left">{{item.user || '未知'}}</div>  
+                                <div class="name_title_left">{{item.user || '未知'}}</div>
                                 <div class="content_left"> {{item.introduction}} </div>
                             </div>
                         </div>
@@ -120,6 +120,11 @@
                   if (data.code == 200) {
                       if (data.result && data.result.length) {
                           this.dataList = data.result;
+                          setTimeout(()=>{
+                            var body = document.body;
+                            document.body.scrollTop = body.scrollHeight + 100;
+                            document.documentElement.scrollTop = body.scrollHeight + 100;
+                          },500)
                       }
                   } else {
                       Toast({
@@ -136,7 +141,6 @@
                 introduction: this.introduction,
                 headerImg: this.userData.headerImg
             }
-            console.log(obj);
             util.post('/apis/addChatInfo', obj, ()=>{
                 this.introduction = ''
                 this.io.emit('addChatInfo')
@@ -155,8 +159,6 @@
          },
          getUserInfo(){
              util.post('/apis/getUserInfo',{},(data)=>{
-                 console.log('----------------')
-                 console.log(data)
                  this.userData = data.result;
              })
          }
